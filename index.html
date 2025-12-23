@@ -1,1 +1,123 @@
-<h1>hello</h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Ashok Kumar | Projects</title>
+    <link rel="stylesheet" href="projects.css">
+<meta name="google-site-verification" content="H4bJ8ygNnzg-_MNTamB8WW78z-IqsZjpVHuNjUCPxmA" />
+  body{
+    margin:0;
+    font-family:Arial, sans-serif;
+    background:#f4f4f4;
+}
+
+header{
+    background:#111;
+    color:white;
+    text-align:center;
+    padding:40px 20px;
+}
+
+.projects{
+    display:grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap:20px;
+    padding:40px;
+}
+
+.project-card{
+    background:white;
+    padding:15px;
+    border-radius:10px;
+    box-shadow:0 5px 15px rgba(0,0,0,0.1);
+    transition:0.3s;
+}
+
+.project-card:hover{
+    transform:translateY(-8px);
+}
+
+.project-card img{
+    width:100%;
+    border-radius:8px;
+}
+
+.project-card h3{
+    margin:10px 0;
+}
+
+.project-card span{
+    display:block;
+    font-size:14px;
+    color:#555;
+    margin:10px 0;
+}
+
+.buttons{
+    display:flex;
+    gap:10px;
+}
+
+.btn{
+    text-decoration:none;
+    padding:8px 15px;
+    background:#007bff;
+    color:white;
+    border-radius:5px;
+    font-size:14px;
+}
+
+.btn-dark{
+    background:#333;
+}
+
+</head>
+<body>
+
+<header>
+    <h1>My Projects</h1>
+    <p>Some of my best work</p>
+</header>
+
+<section class="projects">
+
+    <div class="project-card">
+        <img src="https://via.placeholder.com/300" alt="Project">
+        <h3>Rojgar Setu</h3>
+        <p>Job portal connecting workers and employers across India.</p>
+        <span>Tech: Flask, SQLite, HTML, CSS</span>
+        <div class="buttons">
+            <a href="#" class="btn">Live</a>
+            <a href="#" class="btn btn-dark">GitHub</a>
+        </div>
+    </div>
+
+    <div class="project-card">
+        <img src="https://via.placeholder.com/300" alt="Project">
+        <h3>E-commerce Website</h3>
+        <p>Online shopping platform with cart & login system.</p>
+        <span>Tech: Flask, SQLite, JS</span>
+        <div class="buttons">
+            <a href="#" class="btn">Live</a>
+            <a href="#" class="btn btn-dark">GitHub</a>
+        </div>
+    </div>
+
+    <div class="project-card">
+        <img src="https://via.placeholder.com/300" alt="Project">
+        <h3>Resume Maker</h3>
+        <p>Create resumes with multiple templates.</p>
+        <span>Tech: HTML, CSS, JS</span>
+        <div class="buttons">
+            <a href="#" class="btn">Live</a>
+            <a href="#" class="btn btn-dark">GitHub</a>
+        </div>
+    </div>
+
+</section>
+
+<script src="projects.js"></script>
+</body>
+console.log("Projects page loaded successfully");
+  
+</html>
