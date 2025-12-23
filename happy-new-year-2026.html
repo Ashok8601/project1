@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>New Year 2026 Perfect Alignment</title>
+    <style>
+        :root {
+            --bg-color: #1a1642;
+            --text-muted: #4a4a7d;
+            --text-bright: #d1d0e5;
+            --accent-pink: #ff9fb2;
+        }
+
+        body {
+            margin: 0;
+            background-color: var(--bg-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            font-family: Arial, sans-serif;
+            overflow: hidden;
+            color: white;
+        }
+
+        .container {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        /* Year Styling */
+        .year-box {
+            display: flex;
+            font-size: 100px;
+            font-weight: 900;
+            align-items: center;
+            color: var(--text-muted);
+            margin-top: 20px; /* Text ke liye jagah */
+        }
+
+        .digit-holder {
+            position: relative;
+            width: 70px;
+            height: 120px;
+        }
+
+        /* Balloon & 5 Animation */
+        .balloon-group {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            animation: liftUp 4s ease-in-out 1s forwards;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .balloon {
+            width: 40px;
+            height: 50px;
+            background: #f1c40f;
+            border-radius: 50%;
+            position: relative;
+        }
+
+        .balloon::after {
+            content: '';
+            position: absolute;
+            bottom: -20px;
+            left: 50%;
+            width: 2px;
+            height: 35px;
+            background: rgba(255,255,255,0.4);
+        }
+
+        .digit-5 {
+            color: var(--text-muted);
+            line-height: 120px;
+        }
+
+        /* Digit 6 Animation - Right se shift hona */
+        .digit-6 {
+            position: absolute;
+            right: -200px;
+            bottom: 0;
+            color: var(--text-bright);
+            line-height: 120px;
+            animation: slideIn 1.2s cubic-bezier(0.25, 1, 0.5, 1) 2.8s forwards;
+        }
+
+        /* Happy New Year Text Drop - Positioning Fixed */
+        .happy-text {
+            position: absolute;
+            /* Year box ke center ke upar align karne ke liye */
+            bottom: 125px; /* Year box ki height + 5px gap */
+            left: 50%;
+            transform: translateX(-50%);
+            width: 500px;
+            text-align: center;
+            font-family: 'Brush Script MT', cursive;
+            font-size: 65px;
+            color: var(--accent-pink);
+            opacity: 0;
+            animation: dropDown 1s cubic-bezier(0.175, 0.885, 0.32, 1.275) 4s forwards;
+            text-shadow: 0 0 15px rgba(255, 159, 178, 0.5);
+        }
+
+        /* Keyframes */
+        @keyframes liftUp {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-1000px); }
+        }
+
+        @keyframes slideIn {
+            0% { right: -200px; opacity: 0; }
+            100% { right: 0; opacity: 1; }
+        }
+
+        @keyframes dropDown {
+            0% { transform: translate(-50%, -100px); opacity: 0; }
+            100% { transform: translate(-50%, 0); opacity: 1; }
+        }
+
+        /* Sparkles */
+        .sparkle {
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background: #f9d976;
+            clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+            animation: burst 1s ease-out forwards;
+        }
+
+        @keyframes burst {
+            0% { transform: scale(0); opacity: 1; }
+            100% { transform: scale(1.5) translate(var(--tx), var(--ty)); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="happy-text">Happy new year</div>
+        
+        <div class="year-box">
+            <span>202</span>
+            <div class="digit-holder">
+                <div class="balloon-group">
+                    <div class="balloon"></div>
+                    <div class="digit-5">5</div>
+                </div>
+                <div class="digit-6">6</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sparkles effect jab text drop ho
+        setTimeout(() => {
+            const container = document.querySelector('.container');
+            for(let i=0; i<25; i++) {
+                const s = document.createElement('div');
+                s.className = 'sparkle';
+                const tx = (Math.random() - 0.5) * 400 + 'px';
+                const ty = (Math.random() - 0.5) * 200 + 'px';
+                s.style.setProperty('--tx', tx);
+                s.style.setProperty('--ty', ty);
+                s.style.left = '50%';
+                s.style.top = '20%';
+                container.appendChild(s);
+            }
+        }, 4200);
+    </script>
+</body>
+</html>
