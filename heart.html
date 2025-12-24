@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gradient Powder Heart</title>
+    <style>
+        body { margin: 0; overflow: hidden; background-color: #000; }
+        canvas { display: block; }
+    </style>
+</head>
+<body>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+    <script>
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ antialias: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        document.body.appendChild(renderer.domElement);
+
+        camera.position.z = 45;
+
+        const particlesCount = 6000; // ज्यादा पार्टिकल्स ताकि लाइन घनी दिखे
+        const positions = new Float32Array(particlesCount * 3);
+        const targetPositions = new Float32Array(particlesCount * 3);
+        const colors = new Float32Array(particlesCount * 3);
+        
+        const geometry = new THREE.BufferGeometry();
+        
+        // Heart Math Function
+        function getHeartPoint(t) {
+            const x = 16 * Math.pow(Math.sin(t), 3);
+            const y = 13 * Math.cos(t) - 5 * Math.cos(2 * t) - 2 * Math.cos(3 * t) - Math.cos(4 * t);
+            return { x: x * 1.2, y: y * 1.2 };
+        }
+
+        const color1 = new THREE.Color(0x00f2ff); // Neon Blue
+        const color2 = new THREE.Color(0xff007f); // Neon Pink/Rose
+
+        for (let i = 0; i < particlesCount; i++) {
+            // 1. शुरुआत में बिखरा हुआ पाउडर (Full Screen)
+            positions[i * 3] = (Math.random() - 0.5) * 150;
+            positions[i * 3 + 1] = (Math.random() - 0.5) * 100;
+            positions[i * 3 + 2] = (Math.random() - 0.5) * 50;
+
+            // 2. टारगेट (Thin Single Line Heart)
+            const t = (i / particlesCount) * Math.PI * 2;
+            const point = getHeartPoint(t);
+            targetPositions[i * 3] = point.x;
+            targetPositions[i * 3 + 1] = point.y;
+            targetPositions[i * 3 + 2] = 0;
+
+            // 3. Gradient Color Logic (Blue to Pink)
+            const mixRatio = i / particlesCount;
+            const finalColor = color1.clone().lerp(color2, mixRatio);
+            colors[i * 3] = finalColor.r;
+            colors[i * 3 + 1] = finalColor.g;
+            colors[i * 3 + 2] = finalColor.b;
+        }
+
+        geometry.setAttribute('position', new THREE.BufferAttribute(positions, 3));
+        geometry.setAttribute('color', new THREE.BufferAttribute(colors, 3));
+
+        // Point size 0.15 is roughly 1px visual thickness
+        const material = new THREE.PointsMaterial({
+            size: 0.15,
+            vertexColors: true,
+            blending: THREE.AdditiveBlending,
+            transparent: true,
+            opacity: 1
+        });
+
+        const heartParticles = new THREE.Points(geometry, material);
+        scene.add(heartParticles);
+
+        let animationRunning = true;
+        let progress = 0;
+
+        function animate() {
+            if (!animationRunning) return; // एनीमेशन रोकने के लिए
+
+            const frame = requestAnimationFrame(animate);
+            const currentPos = geometry.attributes.position.array;
+
+            let finishedCount = 0;
+
+            for (let i = 0; i < particlesCount; i++) {
+                const ix = i * 3, iy = i * 3 + 1, iz = i * 3 + 2;
+
+                // Slow Motion Gathering (Easing effect)
+                const dx = (targetPositions[ix] - currentPos[ix]);
+                const dy = (targetPositions[iy] - currentPos[iy]);
+                const dz = (targetPositions[iz] - currentPos[iz]);
+
+                // पार्टिकल को टारगेट की तरफ बढ़ाना
+                currentPos[ix] += dx * 0.02; 
+                currentPos[iy] += dy * 0.02;
+                currentPos[iz] += dz * 0.02;
+
+                // अगर पार्टिकल अपनी जगह के बहुत करीब है
+                if (Math.abs(dx) < 0.01 && Math.abs(dy) < 0.01) {
+                    finishedCount++;
+                }
+            }
+
+            geometry.attributes.position.needsUpdate = true;
+
+            // अगर 99% पार्टिकल्स सेट हो गए, तो एनीमेशन रोक दो
+            if (finishedCount > particlesCount * 0.99) {
+                animationRunning = false;
+                cancelAnimationFrame(frame);
+                console.log("Heart Formed - Animation Stopped.");
+            }
+
+            renderer.render(scene, camera);
+        }
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+
+        animate();
+    </script>
+</body>
+</html>
