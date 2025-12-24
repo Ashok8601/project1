@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Ultra Realistic Christmas Tree</title>
+
+<style>
+body{
+    margin:0;
+    height:100vh;
+    background:radial-gradient(circle at top,#021b30,#000);
+    display:flex;
+    justify-content:center;
+    align-items:flex-end;
+    overflow:hidden;
+    font-family:Arial;
+}
+
+/* TREE BASE */
+.tree{
+    position:relative;
+    width:400px;
+    height:520px;
+    margin-bottom:40px;
+}
+
+/* TRUNK */
+.trunk{
+    position:absolute;
+    bottom:0;
+    left:50%;
+    transform:translateX(-50%) scaleY(0);
+    width:70px;
+    height:110px;
+    background:linear-gradient(#3b1f0f,#5a2d17);
+    border-radius:10px;
+    opacity:0;
+    animation:trunkGrow 2s ease forwards;
+    animation-delay:6s;
+}
+
+@keyframes trunkGrow{
+    to{
+        transform:translateX(-50%) scaleY(1);
+        opacity:1;
+    }
+}
+
+/* STAR */
+.star{
+    position:absolute;
+    top:-50px;
+    left:50%;
+    transform:translateX(-50%) scale(0);
+    font-size:45px;
+    color:gold;
+    opacity:0;
+    animation:starPop 1.5s ease forwards;
+    animation-delay:8s;
+}
+
+@keyframes starPop{
+    to{
+        transform:translateX(-50%) scale(1);
+        opacity:1;
+    }
+}
+
+/* LEAF */
+.leaf{
+    position:absolute;
+    width:14px;
+    height:24px;
+    background:linear-gradient(#0fa34a,#064d24);
+    clip-path:polygon(50% 0%,100% 100%,50% 80%,0 100%);
+    transform:scale(0);
+    opacity:0;
+    animation:leafGrow 1.2s ease forwards;
+}
+
+@keyframes leafGrow{
+    to{
+        transform:scale(1);
+        opacity:1;
+    }
+}
+
+/* LIGHT */
+.light{
+    position:absolute;
+    width:8px;
+    height:8px;
+    border-radius:50%;
+    opacity:0;
+    animation:blink 1.3s infinite alternate;
+}
+
+@keyframes blink{
+    from{opacity:.3;}
+    to{opacity:1;}
+}
+</style>
+</head>
+
+<body>
+
+<div class="tree" id="tree">
+    <div class="star">⭐</div>
+    <div class="trunk"></div>
+</div>
+
+<script>
+const tree = document.getElementById("tree");
+
+/* CREATE DENSE LEAVES */
+let delay = 0;
+for(let layer=0; layer<18; layer++){
+    let leavesInLayer = 10 + layer * 2;
+
+    for(let i=0;i<leavesInLayer;i++){
+        const leaf = document.createElement("div");
+        leaf.className = "leaf";
+
+        const y = 40 + layer * 22;
+        const spread = 12 + layer * 10;
+
+        leaf.style.top = y + "px";
+        leaf.style.left = (200 + (Math.random()*spread*2 - spread)) + "px";
+        leaf.style.transform = `rotate(${Math.random()*360}deg) scale(0)`;
+        leaf.style.animationDelay = delay + "s";
+
+        tree.appendChild(leaf);
+        delay += 0.03;
+    }
+}
+
+/* LIGHTS AFTER TREE COMPLETE */
+setTimeout(()=>{
+    const colors=["red","yellow","blue","white","pink"];
+    for(let i=0;i<35;i++){
+        const light=document.createElement("div");
+        light.className="light";
+        light.style.background=colors[Math.floor(Math.random()*colors.length)];
+        light.style.left=Math.random()*260+70+"px";
+        light.style.top=Math.random()*330+50+"px";
+        tree.appendChild(light);
+
+        setTimeout(()=>light.style.opacity=1,i*150);
+    }
+},9000);
+</script>
+
+</body>
+</html>
