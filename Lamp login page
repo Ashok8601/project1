@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cute Lamp Login Animation</title>
+    <style>
+        :root {
+            --bg-color: #0f172a;
+            --lamp-off: #334155;
+            --lamp-on: #4ade80; /* Cute Green color */
+            --glow: rgba(74, 222, 128, 0.2);
+            --transition-speed: 0.4s;
+        }
+
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: var(--bg-color);
+            font-family: 'Poppins', sans-serif;
+            overflow: hidden;
+            transition: background 0.5s;
+        }
+
+        /* Background light effect when lamp is ON */
+        body.is-on {
+            background-color: #0c111d;
+        }
+
+        .main-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 40px;
+            perspective: 1000px;
+        }
+
+        /* --- Lamp Styling --- */
+        .lamp-container {
+            position: relative;
+            cursor: pointer;
+            width: 200px;
+            text-align: center;
+        }
+
+        #lamp-svg {
+            width: 220px;
+            height: auto;
+            z-index: 2;
+            position: relative;
+        }
+
+        .shade {
+            fill: var(--lamp-off);
+            transition: fill var(--transition-speed);
+        }
+
+        /* The Pull Cord Animation */
+        .cord-group {
+            transition: transform 0.1s ease-out;
+        }
+
+        .cord-line {
+            stroke: #94a3b8;
+            stroke-width: 3;
+        }
+
+        .cord-knob {
+            fill: #64748b;
+        }
+
+        /* Face Expressions */
+        .eye { fill: #1e293b; opacity: 0.4; }
+        .mouth { 
+            stroke: #1e293b; 
+            fill: none; 
+            stroke-width: 2.5; 
+            opacity: 0; 
+            transition: opacity 0.3s;
+        }
+
+        /* Light Beam/Glow */
+        .light-beam {
+            fill: radial-gradient(circle, var(--glow) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.4s;
+        }
+
+        /* --- Login Card Styling --- */
+        .login-card {
+            background: #1e293b;
+            padding: 30px;
+            border-radius: 24px;
+            width: 320px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.5);
+            border: 2px solid transparent;
+            
+            /* Hidden by default */
+            opacity: 0;
+            transform: translateX(50px) rotateY(-10deg);
+            transition: all 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            pointer-events: none;
+        }
+
+        .is-on .login-card {
+            opacity: 1;
+            transform: translateX(0) rotateY(0);
+            pointer-events: all;
+            border-color: var(--lamp-on);
+            box-shadow: 0 0 30px var(--glow);
+        }
+
+        /* Form Elements */
+        h2 { color: white; margin-top: 0; font-size: 24px; }
+        .input-box { margin-bottom: 20px; }
+        label { color: #94a3b8; display: block; font-size: 13px; margin-bottom: 8px; }
+        input {
+            width: 100%;
+            padding: 12px;
+            background: #0f172a;
+            border: 1px solid #334155;
+            border-radius: 12px;
+            color: white;
+            box-sizing: border-box;
+            outline: none;
+        }
+        button {
+            width: 100%;
+            padding: 13px;
+            background: var(--lamp-on);
+            border: none;
+            border-radius: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+        button:hover { transform: translateY(-2px); box-shadow: 0 5px 15px var(--glow); }
+
+        /* --- States when ON --- */
+        .is-on .shade { fill: var(--lamp-on); }
+        .is-on .light-beam { opacity: 1; }
+        .is-on .eye { opacity: 1; }
+        .is-on .mouth { opacity: 1; }
+
+        /* Animation when pulling */
+        .pulling .cord-group {
+            transform: translateY(15px);
+        }
+    </style>
+</head>
+<body>
+
+<div class="main-wrapper" id="wrapper">
+    <div class="lamp-container" onclick="pullCord()">
+        <svg id="lamp-svg" viewBox="0 0 200 300">
+            <defs>
+                <radialGradient id="lightGrad" cx="50%" cy="50%" r="50%">
+                    <stop offset="0%" style="stop-color:var(--lamp-on); stop-opacity:0.4" />
+                    <stop offset="100%" style="stop-color:var(--lamp-on); stop-opacity:0" />
+                </radialGradient>
+            </defs>
+            <circle class="light-beam" cx="100" cy="100" r="100" fill="url(#lightGrad)" />
+
+            <g class="cord-group" id="cord">
+                <line class="cord-line" x1="130" y1="110" x2="130" y2="190" />
+                <circle class="cord-knob" cx="130" cy="195" r="8" />
+            </g>
+
+            <rect fill="#1e293b" x="90" y="110" width="20" height="150" rx="5" />
+            <rect fill="#1e293b" x="60" y="260" width="80" height="15" rx="7" />
+
+            <path class="shade" d="M40,120 L160,120 L180,40 L20,40 Z" />
+
+            <circle class="eye" cx="80" cy="80" r="4" />
+            <circle class="eye" cx="120" cy="80" r="4" />
+            <path class="mouth" d="M90,95 Q100,105 110,95" id="mouth" />
+        </svg>
+    </div>
+
+    <div class="login-card">
+        <h2>Welcome Back</h2>
+        <div class="input-box">
+            <label>Username</label>
+            <input type="text" placeholder="Enter username">
+        </div>
+        <div class="input-box">
+            <label>Password</label>
+            <input type="password" placeholder="••••••••">
+        </div>
+        <button>Login</button>
+        <p style="color:#64748b; font-size:12px; text-align:center; margin-top:15px; cursor:pointer;">Forgot Password?</p>
+    </div>
+</div>
+
+<script>
+    function pullCord() {
+        const wrapper = document.getElementById('wrapper');
+        const lampContainer = document.querySelector('.lamp-container');
+
+        // 1. "Pull" animation ka effect dena
+        lampContainer.classList.add('pulling');
+        
+        setTimeout(() => {
+            // 2. Cord wapas upar jayega
+            lampContainer.classList.remove('pulling');
+            
+            // 3. Lamp jal jayega aur Form dikhega
+            wrapper.classList.toggle('is-on');
+            document.body.classList.toggle('is-on');
+        }, 150);
+    }
+</script>
+
+</body>
+</html>
